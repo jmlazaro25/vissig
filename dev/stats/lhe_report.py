@@ -75,14 +75,14 @@ def main():
     # Fill report
     report['Average p'] = np.average( ap_momentum, axis=0 )
     report['Average A\' angle wrt z [deg]'] = np.average( [
-                                                angle(
+                                                phys_form.angle(
                                                         ap_momentum[e,:3],
                                                         units='degrees'
                                                         ) \
                                                 for e in range(nEvents)
                                                 ] )
     report['Average max(e+,e- angle wrt z)'] = np.average( [ max( [
-                                                angle(
+                                                phys_form.angle(
                                                         es_momentum[e,p,:3],
                                                         units='degrees'
                                                         ) \
@@ -96,34 +96,5 @@ def main():
 
     if args.plot:
         pass
-
-# From bdt/mods/physics
-import math
-
-def angle(vec, units, vec2=[0,0,1]):
-
-    """ Angle between vectors (with z by default) """
-
-    if units=='degrees': return math.acos( dot( unit(vec), unit(vec2) ) )*180.0/math.pi
-    elif units=='radians': return math.acos( dot( unit(vec), unit(vec2) ) )
-    else: print('\nSpecify valid angle unit ("degrees" or "randians")')
-
-def mag(iterable):
-
-    """ Magnitude of whatever """
-
-    return math.sqrt(sum([x**2 for x in iterable]))
-
-def unit(arrayy):
-
-    """ Return normalized np array """
-
-    return np.array(arrayy)/mag(arrayy)
-
-def dot(i1, i2):
-
-    """ Dot iterables """
-
-    return sum( [i1[i]*i2[i] for i in range( len(i1) )] )
 
 if __name__=='__main__': main()

@@ -75,3 +75,34 @@ def replaceNums(line_w_nums, tokens, new_vals):
         new_line = re.sub(number, str(new_val), new_line, count=1)
 
     return new_line
+
+##################################################
+# From bdt/mods/physics
+##################################################
+import math
+
+def angle(vec, units, vec2=[0,0,1]):
+
+    """ Angle between vectors (with z by default) """
+
+    if units=='degrees': return math.acos( dot( unit(vec), unit(vec2) ) )*180.0/math.pi
+    elif units=='radians': return math.acos( dot( unit(vec), unit(vec2) ) )
+    else: print('\nSpecify valid angle unit ("degrees" or "randians")')
+
+def mag(iterable):
+
+    """ Magnitude of whatever """
+
+    return math.sqrt(sum([x**2 for x in iterable]))
+
+def unit(arrayy):
+
+    """ Return normalized np array """
+
+    return np.array(arrayy)/mag(arrayy)
+
+def dot(i1, i2):
+
+    """ Dot iterables """
+
+    return sum( [i1[i]*i2[i] for i in range( len(i1) )] )
