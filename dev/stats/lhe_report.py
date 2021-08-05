@@ -76,7 +76,6 @@ def main():
     report['Average p'] = np.average( ap_momentum, axis=0 )
     report['Average A\' angle wrt z [deg]'] = np.average( [
                                                 phys_form.angle(
-                                                angle(
                                                         ap_momentum[e,:3],
                                                         units='degrees'
                                                         ) \
@@ -84,7 +83,6 @@ def main():
                                                 ] )
     report['Average max(e+,e- angle wrt z)'] = np.average( [ max( [
                                                 phys_form.angle(
-                                                angle(
                                                         es_momentum[e,p,:3],
                                                         units='degrees'
                                                         ) \
