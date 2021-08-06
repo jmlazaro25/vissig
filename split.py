@@ -13,8 +13,9 @@ def load(fil,treeName='LDMX_Events'):
     return twee
 
 def main():
-    
-    gs = ('0.001','0.01','0.1','1.0')
+
+    # Not triggered (we'll want a different one than for stan)
+    gs = ('pn','0.001','0.01','0.1','1.0')
     bkg_train_min = 1_250_000
     sig_train_min = 312_500
 
@@ -26,7 +27,7 @@ def main():
         files = glob( indir + '/{}/*.root'.format(g))
         n_evs = [ load(f).GetEntries() for f in files ]
 
-        #if g == gs[0]: train_min = bkg_train_min
+        if g == gs[0]: train_min = bkg_train_min
         train_min = sig_train_min
 
         # Report some stuff
@@ -80,6 +81,7 @@ def main():
             os.system( 'mv {} {}'.format(files[ci], cutdir) )
     
         # Move all others into testing
+        if not os.path.exists( f'{outdir}/{g}' ): os.makedirs( f'{outdir}/{g}' )
         for f in files[ci+1:]:
             print('mv {} {}/{}'.format(f, outdir, g))
             os.system( 'mv {} {}/{}'.format(f, outdir, g) )
