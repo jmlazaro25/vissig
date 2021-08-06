@@ -3,6 +3,17 @@ import decimal
 import numpy as np
 from scipy import  interpolate
 
+# Helpful Constants
+hbar = 6.582e-25 # GeV*s
+c_speed = 299_792_458_000 # mm/s
+
+# Helpful functions
+def tau(mAp, epsilon):
+
+    """ Lifetime of A' """
+
+    return hbar / gamma_ap_tot(mAp, epsilon)
+
 # <From Nikita Blinov> ##################################################
 # Hadronic R ratio used to compute hadronic width of the A'
 try: Rvals=np.loadtxt("r_fixed.dat")
