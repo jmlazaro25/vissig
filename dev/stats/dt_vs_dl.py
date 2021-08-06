@@ -24,8 +24,6 @@ def main():
 
     # Constants
     mAp, eps, gamma = args.mAp, args.eps, args.gamma
-    hbar = 6.582e-25 # GeV*s
-    c_speed = 299_792_458_000 # mm/s
 
     # Detector limits
     zmin = 300
@@ -43,8 +41,7 @@ def main():
 
     # Decay time
     t = Symbol('t')
-    decay_width = phys_form.gamma_ap_tot(mAp, eps)
-    tau = hbar / decay_width
+    tau = phys_form.tau(mAp, eps)
     decay_t_rv = Exponential(t, 1/tau)
     decay_t = sample(
                         decay_t_rv,
@@ -54,7 +51,7 @@ def main():
 
     # Decay length
     z = Symbol('z')
-    gctau = gamma*c_speed*tau
+    gctau = gamma * phys_form.c_speed * tau
     #print(gctau) # For when you only want to know gcctau
     #if True: return
     decay_l_rv = Exponential(z, 1/gctau)
@@ -98,8 +95,8 @@ def main():
                 Ap_3mom = np.array((px,py,pz))
 
                 # Decay time
-                t = next(decay_t)#*(en/mAp)
-                dt_zs.append( Ap_3mom[2]*c_speed / mAp * t )
+                t = next(decay_t)
+                dt_zs.append( Ap_3mom[2]*phys_form.c_speed / mAp * t )
 
                 # Decay length
                 l = next(decay_l)
