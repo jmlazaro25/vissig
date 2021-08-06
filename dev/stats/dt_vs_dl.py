@@ -35,8 +35,7 @@ def main():
     nEvents = 10_000
     dt_zs = []
     dl_zs = []
-    report = {
-            }
+    report = {}
 
     ##################################################
     # Analysis
@@ -53,11 +52,11 @@ def main():
                         seed=np.random.seed( 2 )
                         )
 
-    # Decay z
+    # Decay length
     z = Symbol('z')
     gctau = gamma*c_speed*tau
-    print(gctau)
-    if True: return
+    #print(gctau) # For when you only want to know gcctau
+    #if True: return
     decay_l_rv = Exponential(z, 1/gctau)
     decay_l = sample(
                         decay_l_rv,
@@ -99,47 +98,85 @@ def main():
                 Ap_3mom = np.array((px,py,pz))
 
                 # Decay time
-                t = next(decay_t)*(en/mAp)
-                dt_zs.append( Ap_3mom[2]*c_speed / mAp * t)
+                t = next(decay_t)#*(en/mAp)
+                dt_zs.append( Ap_3mom[2]*c_speed / mAp * t )
 
                 # Decay length
                 l = next(decay_l)
-                dl_zs.append( phys_form.dot(
-                                            phys_form.unit(Ap_3mom) * l,
-                                            (0,0,1)
-                                            )
-                                )
+                dl_zs.append( phys_form.unit(Ap_3mom)[2] * l )
 
     # Fill report
-    #report['something'] = something
+    report['gamma * c * tau [mm]'] = gctau
 
     # Print report
     for k,v in report.items():
         print( '{}: {}'.format(k,v) )
 
-    plot( Times=dt_zs, Lengths=dl_zs )
-    plt.title(r"$m_{A'} =$" + str(mAp) + r" GeV, $\epsilon$ = " + str(eps))
+    plot( mAp=mAp, eps=eps, Times=dt_zs, Lengths=dl_zs )
     plt.show()
 
 def plot(**kwargs):
 
     """ Plot Z distributions of decay times and decay lengths """
 
+    # Individual
+    plt.figure(1)
     plt.ylabel(r'A.U.')
     plt.xlabel(r'Decay Z [mm]')
+    plt.title(
+                r"$m_{A'} =$" + str( kwargs['mAp'] ) + ' GeV, '
+                + r'$\epsilon$ = ' + str( kwargs['eps'] )
+                )
 
-    #print([ len(d) for d in kwargs.values() ]) #rem
+    ns = []
     for lab, data in kwargs.items():
+        if type(data) == float: continue
+        plt.figure(0)
         plt.hist(
-                    data,
-                    histtype = 'step',
-                    log = True,
-                    density = True,
-                    range = (0,4000),
-                    bins = 50,
-                    label = lab
-                    )
+                            np.clip(data,0,4000),
+                            histtype = 'step',
+                            log = True,
+                            density = True,
+                            range = (0,4000),
+                            bins = 50,
+                            label = lab
+                            )[:2]
+        plt.figure(1)
+        n, bins = plt.hist(
+                            np.clip(data,0,4000),
+                            histtype = 'step',
+                            range = (0,4000),
+                            bins = 50,
+                            label = lab
+                            )[:2]
+        ns.append(n)
+
+    if True:
+        print('Events per bin:')
+        for x,y in zip( ns[0], ns[1] ):
+            print(x,y)
 
     plt.legend(loc='upper right')
+
+    # Ratio
+    plt.figure(2)
+    plt.ylabel(r'$n_{Lengths}/n_{Times}$')
+    plt.xlabel(r'Decay Z [mm]')
+    plt.title(
+                r"$m_{A'} =$" + str( kwargs['mAp'] ) + ' GeV, '
+                + r'$\epsilon$ = ' + str( kwargs['eps'] )
+                )
+
+
+    plt.step(
+            bins[:-1],
+            ns[1]/ns[0],
+            )
+
+    # Plot ratio errorbars
+    #plt.scatter()
+
+    plt.ylim( 0, plt.ylim()[1] )
+    
 
 if __name__=='__main__': main()
