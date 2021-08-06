@@ -49,7 +49,7 @@ dark_brem_file, ap_decay_file, n_allowed_events = reformat.writeBremDecay(
                                                         )
 
 # Reduce number of events to produce if needed
-if p.maxEvents > n_allowed_events: p.maxEvents == n_allowed_events
+p.maxEvents = min( p.maxEvents, n_allowed_events)
 
 # Generators 
 from LDMX.SimCore import generators
