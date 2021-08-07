@@ -1,24 +1,29 @@
 from argparse import ArgumentParser
 parser = ArgumentParser()
-parser.add_argument('-r', action='store', dest='run', type=int)
-parser.add_argument('-m', action='store', dest='mAp', type=float)
-parser.add_argument('-e', action='store', dest='eps', type=float)
-parser.add_argument('-i', action='store', dest='infile')
-parser.add_argument('--lheout', action='store', dest='lheout')
-parser.add_argument('--rootout', action='store', dest='rootout')
+parser.add_argument('-r', dest='run', type=int)
+parser.add_argument('-m', dest='mAp', type=float)
+parser.add_argument('-e', dest='eps', type=float)
+parser.add_argument('-z', dest='zlims', type=int, nargs=2,)
+parser.add_argument('-i', dest='infile')
+parser.add_argument('--lheout', dest='lheout')
+parser.add_argument('--rootout', dest='rootout')
 args = parser.parse_args()
 
 # Set up process
 from LDMX.Framework import ldmxcfg
-p = ldmxcfg.Process('vsig')
+proc = 'v12' # Consider arg
+p = ldmxcfg.Process(f'{proc}')
 p.outputFiles = [
                     '{}/{}.root'.format(
                                         args.rootout,
                                         args.infile\
                                                 .split('/')[-1]\
                                                 .split('.lhe')[0]\
-                                                + '_run{}'.format(args.run)
-                                                + '_eps{}'.format(args.eps)
+                                                + f'_run{args.run}'
+                                                + f'_eps{args.eps}'
+                                                + f'_z{args.zlims[0]}'
+                                                + f'-{args.zlims[1]}'
+                                                + f'_lp{proc}'
                                         )
                     ]
 p.maxEvents = 10_000
@@ -43,6 +48,7 @@ dark_brem_file, ap_decay_file, n_allowed_events = reformat.writeBremDecay(
                                                         args.infile,
                                                         args.mAp,
                                                         args.eps,
+                                                        args.zlims,
                                                         args.run, # Random seed
                                                         args.lheout
                                                         #nevents = 10_000

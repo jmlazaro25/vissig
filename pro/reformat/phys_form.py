@@ -1,3 +1,4 @@
+import os
 import re
 import decimal
 import numpy as np
@@ -16,8 +17,7 @@ def tau(mAp, epsilon):
 
 # <From Nikita Blinov> ##################################################
 # Hadronic R ratio used to compute hadronic width of the A'
-try: Rvals=np.loadtxt("r_fixed.dat")
-except: Rvals=np.loadtxt("/nfs/slac/g/ldmx/users/jmlazaro/samples/v3/4gev/vissig/pro/reformat/r_fixed.dat")
+Rvals=np.loadtxt("reformat/r_fixed.dat")
 Rvals_interp = interpolate.interp1d(Rvals[:,0],Rvals[:,1],kind='linear');
 
 def Rfunc(s):

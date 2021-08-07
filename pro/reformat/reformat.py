@@ -8,7 +8,15 @@ from scipy import interpolate
 from sympy.stats import sample, Uniform, Exponential
 from reformat import phys_form
 
-def writeBremDecay(lhe, mAp, eps, seed, outdir=None, nevents=10_000):
+def writeBremDecay( # Might want a config later
+                    lhe,
+                    mAp,
+                    eps,
+                    zlims,
+                    seed,
+                    outdir=None,
+                    nevents=10_000
+                    ):
 
     """ Break A'->ee LHEs into brem and decay files and reformat/rescale """
 
@@ -36,9 +44,9 @@ def writeBremDecay(lhe, mAp, eps, seed, outdir=None, nevents=10_000):
     Ys = sample( y_rv, numsamples=nevents, seed=np.random.seed( seed ) )
     #Zs = sample( z_rv, numsamples=nevents, seed=np.random.seed( seed ) )
 
-    # Detector limits
-    zmin = 300 # Currently unused to allow flexibility in analysis
-    zmax = 4000 # - 300 end of hcal is hard upper limit
+    # Detector limits (pheno paper uses [270, 3200] and 4000 is a hard upperlim
+    zmin = zlims[0]
+    zmax = zlims[1]
 
     # Decay time
     t = Symbol('t')
@@ -59,7 +67,10 @@ def writeBremDecay(lhe, mAp, eps, seed, outdir=None, nevents=10_000):
             open(bremfile, 'w') as bremf,  \
             open(decayfile, 'w') as decayf, \
             open(decay_vs, 'w') as decayvs:
-    
+
+        # Write lims to .dat (plus extra 0s to maintain array shape)
+        decayvs.write( f'{zmin} {zmax} 0 0\n' )
+
         ##################################################
         # Edit header (techincaly until </init>
         # Many conditions shouldn't check in events sec.
@@ -149,7 +160,7 @@ def writeBremDecay(lhe, mAp, eps, seed, outdir=None, nevents=10_000):
                 d_vertex = c_vertex + Ap_3mom*phys_form.c_speed / mAp * t
 
                 # If not in allowed z, don't write event
-                if d_vertex[2] > zmax: continue
+                if not (zmin < d_vertex[2] < zmax): continue
                 nevents_used += 1 # Else, count event as used
 
                 # If it is allowed, catch up the writing
