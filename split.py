@@ -13,7 +13,7 @@ def load(fil,treeName='LDMX_Events'):
     return twee
 
 def main():
-   
+
     # Not triggered (we'll want a different one than for stan)
     gs = ('pn','0.001','0.01','0.1','1.0')
     bkg_train_min = 1_250_000
