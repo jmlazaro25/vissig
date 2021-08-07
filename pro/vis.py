@@ -21,7 +21,7 @@ p.outputFiles = [
                                                 + '_eps{}'.format(args.eps)
                                         )
                     ]
-p.maxEvents = 100
+p.maxEvents = 10_000
 p.logFrequency = 1
 p.termLogLevel = 0
 p.run = args.run # Handles random seeds

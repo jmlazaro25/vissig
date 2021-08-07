@@ -24,18 +24,18 @@ def main():
 
     # Relevant dirs
     nfsdir = '/nfs/slac/g/ldmx/users/jmlazaro'
-    pwd = '/nfs/slac/g/ldmx/users/jmlazaro/samples/v3/vissig/lhes' # bc home isn't home
-    lheout = f'{pwd}/{args.mAp}/reformatted'
-    rootout = f'{nfsdir}/samples/v3/vissig/train/{args.mAp}'
+    pwd = f'{nfsdir}/samples/v3/4gev/vissig/pro' # bc home isn't home
+    lheout = f'{pwd}/lhes/{args.mAp}/reformatted'
+    rootout = f'{nfsdir}/samples/v3/4gev/vissig/train/{args.mAp}'
     if not os.path.exists(lheout): os.makedirs(lheout) 
     if not os.path.exists(rootout):
-        print(f'Making {outdir}')
+        print(f'Making {rootout}')
         os.makedirs(rootout) 
 
     # Command that will be used to submit jobs to the batch system
     batch_command = ('bsub '
 
-                     + '-W 100 '
+                     + '-W 150 '
 
                      #+ '-q short '
                      #+ '-W 60 '
@@ -53,7 +53,7 @@ def main():
     # Build list of complete commands
     job_commands = [] # Remnant from more complex batch system but still could be useful for debugging
     for fil in sorted(
-                        glob(f'{pwd}/0.01/split/*'),
+                        glob(f'{pwd}/lhes/{args.mAp}/split/*'),
                         key=lambda x: int( x.split('_p')[1].split('.lhe')[0] )
                         ):
 
@@ -62,7 +62,7 @@ def main():
                             + f'-r {len(job_commands)}'  
                             )
 
-    job_commands = job_commands[:2]
+    #job_commands = job_commands[:2]
 
     # Submit them
     for command in job_commands:

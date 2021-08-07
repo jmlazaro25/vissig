@@ -37,8 +37,8 @@ def writeBremDecay(lhe, mAp, eps, seed, outdir=None, nevents=10_000):
     #Zs = sample( z_rv, numsamples=nevents, seed=np.random.seed( seed ) )
 
     # Detector limits
-    zmin = 300
-    zmax = 4000 - 300
+    zmin = 300 # Currently unused to allow flexibility in analysis
+    zmax = 4000 # - 300 end of hcal is hard upper limit
 
     # Decay time
     t = Symbol('t')
@@ -149,7 +149,7 @@ def writeBremDecay(lhe, mAp, eps, seed, outdir=None, nevents=10_000):
                 d_vertex = c_vertex + Ap_3mom*phys_form.c_speed / mAp * t
 
                 # If not in allowed z, don't write event
-                if not ( zmin <= d_vertex[2] <= zmax ): continue
+                if d_vertex[2] > zmax: continue
                 nevents_used += 1 # Else, count event as used
 
                 # If it is allowed, catch up the writing
