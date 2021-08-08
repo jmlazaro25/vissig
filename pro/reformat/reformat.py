@@ -14,26 +14,22 @@ def writeBremDecay( # Might want a config later
                     eps,
                     zlims,
                     seed,
-                    outdir=None,
+                    outdir,
+                    outname,
                     nevents=10_000
                     ):
 
     """ Break A'->ee LHEs into brem and decay files and reformat/rescale """
 
-    # Write to input directory if outdir not provided
-    if outdir is None: outdir = '/'.join( lhe.split('/')[:-1] )
-
     # Create outdir if needed
     if not os.path.exists(outdir): os.makedirs(outdir)
 
     # Outfile names
-    genname = lhe.split('/')[-1].split('.lhe')[0] \
-            + '_run{}'.format(seed) \
-            + '_eps{}'.format(eps)
-    bremfile = '{}/{}_brem.lhe'.format(outdir,genname)
-    decayfile = '{}/{}_decay.lhe'.format(outdir,genname)
-    decay_vs = '{}/{}_decay.dat'.format(outdir,genname)
-    print( 'Reformatting:\n{}\nInto:\n{}\n{}'.format(lhe,bremfile,decayfile) )
+    bremfile = f'{outdir}/{outname}_brem.lhe'
+    decayfile = f'{outdir}/{outname}_decay.lhe'
+    decay_vs = f'{outdir}/{outname}_decay.dat'
+    print( f'Reformatting:\n{lhe}\nInto:\n{bremfile}\n{decayfile}')
+    print( f'And verticies to:\n{decay_vs}')
 
     # Creation XYZ
     Sym = Symbol('q')
