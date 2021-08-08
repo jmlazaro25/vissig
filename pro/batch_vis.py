@@ -10,8 +10,9 @@ def main():
     
     # Syntax 
     parser = ArgumentParser()
-    parser.add_argument('-m', action='store', dest='mAp', type=float)
-    parser.add_argument('-e', action='store', dest='eps', type=float)
+    parser.add_argument('-m', dest='mAp', type=float)
+    parser.add_argument('-e', dest='eps', type=float)
+    parser.add_argument('-z', dest='zlims', type=int, nargs=2)
     parser.add_argument('-n', dest='batch_size', type=int, default=1)
     args = parser.parse_args()
 
@@ -46,6 +47,7 @@ def main():
                      + f'fire {pwd}/vis.py '
                      + f'-m {args.mAp} '
                      + f'-e {args.eps} '
+                     + f'-z {args.zlims[0]} {args.zlims[1]} '
                      + f'--lheout {lheout} '
                      + f'--rootout {rootout} '
                     )
